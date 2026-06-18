@@ -14,13 +14,11 @@ spec:
           type: object
   targets:
     - target: admission.k8s.gatekeeper.sh
-      code:
-        - engine: rego
-          source: |
-            package forbidhostnetwork
+      rego: |
+        package forbidhostnetwork
 
-            violation[{"msg": msg}] {
-              spec := object.get(input.review.object, "spec", {})
-              spec.hostNetwork == true
-              msg := "Pod cannot use hostNetwork: true — use pod network namespace instead"
-            }
+        violation[{"msg": msg}] {
+          spec := object.get(input.review.object, "spec", {})
+          spec.hostNetwork == true
+          msg := "Pod cannot use hostNetwork: true — use pod network namespace instead"
+        }
