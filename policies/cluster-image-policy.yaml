@@ -1,0 +1,19 @@
+apiVersion: policy.sigstore.dev/v1beta1
+kind: ClusterImagePolicy
+metadata:
+  name: require-signed-w10-api
+  labels:
+    owner: hailv
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  images:
+    - glob: ghcr.io/hailv1209/w10-api*
+  authorities:
+    - name: w10-api-cosign-key
+      key:
+        data: |
+          -----BEGIN PUBLIC KEY-----
+          MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC4W64XlDbH6oa3ryJRzDdVT+FfaR
+          imRszeIInzLx5g/Mw9Tmb2esCnr7TbMaaueODDq6p1r1FrrKBKZSeDD63Q==
+          -----END PUBLIC KEY-----

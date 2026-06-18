@@ -1,0 +1,23 @@
+# ArgoCD App: Sync Sigstore image admission policies after policy-controller CRDs exist
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: image-policies
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/hailv1209/W10-temp.git
+    path: policies
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cosign-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
