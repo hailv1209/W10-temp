@@ -1,0 +1,24 @@
+# ConstraintTemplate: Cấm hostNetwork: true
+# Ngăn pod truy cập trực tiếp network namespace của node
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: forbidhostnetwork
+spec:
+  crd:
+    spec:
+      names:
+        kind: ForbidHostNetwork
+      validation:
+        openAPIV3Schema:
+          type: object
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package forbidhostnetwork
+
+        violation[{"msg": msg}] {
+          spec := object.get(input.review.object, "spec", {})
+          spec.hostNetwork == true
+          msg := "Pod cannot use hostNetwork: true — use pod network namespace instead"
+        }

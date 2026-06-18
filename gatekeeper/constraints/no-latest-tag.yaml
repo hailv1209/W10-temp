@@ -1,0 +1,18 @@
+# Constraint: Cấm image tag :latest
+# Áp dụng cho Rollout, Deployment, StatefulSet, DaemonSet
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredTags
+metadata:
+  name: no-latest-tag
+spec:
+  match:
+    kinds:
+      - apiGroups: ["argoproj.io"]
+        kinds: ["Rollout"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+    excludedNamespaces:
+      - kube-system
+      - gatekeeper-system
+  parameters:
+    tags: ["latest"]

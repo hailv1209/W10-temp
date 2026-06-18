@@ -1,0 +1,16 @@
+# Constraint: Cấm hostNetwork: true
+# Áp dụng cho Rollout, Deployment, StatefulSet, DaemonSet
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: ForbidHostNetwork
+metadata:
+  name: no-hostnetwork
+spec:
+  match:
+    kinds:
+      - apiGroups: ["argoproj.io"]
+        kinds: ["Rollout"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+    excludedNamespaces:
+      - kube-system
+      - gatekeeper-system

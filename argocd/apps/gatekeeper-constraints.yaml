@@ -1,0 +1,25 @@
+# ArgoCD App: Deploy 4 Gatekeeper Constraint + ConstraintTemplate
+# sync-wave: 2 → deploy SAU khi controller (wave 0) đã active
+# Quản lý tất cả constraint qua GitOps — KHÔNG kubectl apply tay
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gatekeeper-constraints
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/hailv1209/W10-temp.git
+    path: gatekeeper/constraints
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gatekeeper-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - ServerSideApply=true

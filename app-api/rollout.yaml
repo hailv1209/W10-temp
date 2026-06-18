@@ -19,10 +19,16 @@ spec:
       labels:
         app: api
     spec:
+      securityContext:
+        runAsNonRoot: false
+        fsGroup: 1000
       containers:
       - name: api
         image: ghcr.io/Vuong-Bach/w10-api:0.0.1
         imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
         ports:
         - containerPort: 8080
           protocol: TCP

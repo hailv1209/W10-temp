@@ -1,0 +1,16 @@
+# Constraint: Bắt buộc resources.limits
+# Áp dụng cho Rollout, Deployment, StatefulSet, DaemonSet
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: RequireResourcesLimits
+metadata:
+  name: require-pod-limits
+spec:
+  match:
+    kinds:
+      - apiGroups: ["argoproj.io"]
+        kinds: ["Rollout"]
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+    excludedNamespaces:
+      - kube-system
+      - gatekeeper-system
