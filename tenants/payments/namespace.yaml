@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: payments
+  labels:
+    owner: payments
+    team: payments
+    policy.sigstore.dev/include: "true"
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"

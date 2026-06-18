@@ -188,6 +188,20 @@ ArgoCD applications deploy in order:
 - Wave 1: `app-analysis`, `app-alert` (configuration)
 - Wave 2: `app-api` (application)
 
+### Payments Tenant Isolation
+
+Team `payments` is onboarded as a separate tenant in namespace `payments`.
+
+- Tenant infrastructure: `tenants/payments/`
+- Payments workload: `apps/payments/`
+- ArgoCD apps: `argocd/apps/payments.yaml` and `argocd/apps/payments-app.yaml`
+- Evidence: `evidence/payments/`
+- Detailed lab guide: `LAB-payments-isolation.md`
+
+Existing guardrails automatically apply to payments because Gatekeeper constraints match workload kinds cluster-wide and only exclude system namespaces. Since `payments` is not excluded, rules such as required `owner` labels and required resource limits are enforced without writing new constraints.
+
+`Role` + `RoleBinding` are used inside namespace `payments` so `payments-dev` only receives namespace-scoped permissions. A `ClusterRoleBinding` would bind permissions at cluster scope and could let the team reach resources in `demo`, which would break tenant isolation.
+
 ## Cleanup
 
 ```bash

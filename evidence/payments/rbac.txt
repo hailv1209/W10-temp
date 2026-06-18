@@ -1,0 +1,13 @@
+Command:
+kubectl auth can-i create deployments -n payments --as=payments-dev
+kubectl auth can-i create deployments -n demo --as=payments-dev
+kubectl auth can-i update rolebindings -n payments --as=payments-dev
+kubectl auth can-i get secrets -n payments --as=payments-dev
+kubectl auth can-i delete pods -n payments --as=payments-dev
+
+Result:
+yes
+no
+no
+no
+yes

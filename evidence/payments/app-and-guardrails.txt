@@ -1,0 +1,11 @@
+Payments app:
+deployment "payments-api" successfully rolled out
+deployment.apps/payments-api 2/2
+pods payments-api-* Running
+service/payments-api ClusterIP
+
+Gatekeeper old guardrail - missing resources.limits:
+Error from server (Forbidden): admission webhook "validation.gatekeeper.sh" denied the request: [require-pod-limits] Container 'bad' must define resources.limits (memory/CPU)
+
+Gatekeeper old guardrail - missing owner label:
+Error from server (Forbidden): admission webhook "validation.gatekeeper.sh" denied the request: [require-owner-label] Workload 'payments-missing-owner' in namespace 'payments' must have label 'owner'

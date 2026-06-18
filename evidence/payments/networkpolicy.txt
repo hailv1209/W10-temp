@@ -1,0 +1,11 @@
+Command:
+kubectl -n payments exec <payments-api-pod> -- python -c "import urllib.request; urllib.request.urlopen('http://api.demo.svc.cluster.local', timeout=5).read(); print('CONNECTED')"
+
+Result on current minikube profile:
+CONNECTED
+
+Interpretation:
+The NetworkPolicy manifests are present, but the current minikube profile does not run a NetworkPolicy-enforcing CNI. kube-system has no Calico/Cilium/Antrea/etc. NetworkPolicy objects are accepted by the API server, but they are not enforced at dataplane level.
+
+To make this test pass, recreate/start the lab cluster with an enforcing CNI such as Calico:
+minikube start -p w10 --cni=calico

@@ -1,0 +1,9 @@
+ResourceQuota exceed test:
+
+Result:
+Error from server (Forbidden): error when creating "STDIN": pods "quota-burst" is forbidden: exceeded quota: payments-budget, requested: limits.memory=600Mi, used: limits.memory=256Mi, limited: limits.memory=768Mi
+
+LimitRange default test:
+
+Result:
+Pending {"limits":{"cpu":"100m","memory":"128Mi"},"requests":{"cpu":"50m","memory":"64Mi"}}
