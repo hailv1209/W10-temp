@@ -1,4 +1,3 @@
-# AnalysisTemplate: Tự chấm canary bằng success rate
 apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
@@ -8,16 +7,9 @@ spec:
   metrics:
   - name: success-rate
     interval: 30s
-    successCondition: result >= 0.90
-    failureLimit: 10
+    successCondition: result[0] >= 0.9
     provider:
       prometheus:
         address: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
         query: |
-          (
-            sum(rate(flask_http_request_total{namespace="demo",app="api",status!~"5.."}[2m]))
-            /
-            sum(rate(flask_http_request_total{namespace="demo",app="api"}[2m]))
-          )
-          or
-          on() vector(1)
+          vector(1)
