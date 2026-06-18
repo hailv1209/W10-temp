@@ -1,0 +1,43 @@
+# ArgoCD App: Install External Secrets Operator before SecretStore/ExternalSecret CRs
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-secrets
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://charts.external-secrets.io
+    chart: external-secrets
+    targetRevision: 2.6.0
+    helm:
+      values: |
+        installCRDs: true
+        commonLabels:
+          owner: hailv
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        webhook:
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+        certController:
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-secrets
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
