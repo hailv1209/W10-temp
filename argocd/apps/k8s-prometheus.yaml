@@ -20,6 +20,22 @@ spec:
         commonLabels:
           owner: hailv
 
+        kube-state-metrics:
+          customLabels:
+            owner: hailv
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
+        prometheus-node-exporter:
+          commonLabels:
+            owner: hailv
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
+
         # ---- Resources limits cho tất cả containers ----
         # Giải quyết Gatekeeper constraint require-pod-limits
         prometheusOperator:
@@ -29,12 +45,6 @@ spec:
             limits:
               cpu: 200m
               memory: 256Mi
-        kube-state-metrics:
-          resources:
-            limits:
-              cpu: 100m
-              memory: 128Mi
-
         prometheus:
           prometheusSpec:
             serviceMonitorSelectorNilUsesHelmValues: false
@@ -138,6 +148,8 @@ spec:
             - alertmanager-email
 
         grafana:
+          extraLabels:
+            owner: hailv
           resources:
             limits:
               cpu: 300m
@@ -148,22 +160,15 @@ spec:
                 cpu: 100m
                 memory: 64Mi
           sidecar:
+            resources:
+              limits:
+                cpu: 100m
+                memory: 64Mi
             dashboards:
-              resources:
-                limits:
-                  cpu: 100m
-                  memory: 64Mi
+              enabled: true
             datasources:
-              resources:
-                limits:
-                  cpu: 100m
-                  memory: 64Mi
+              enabled: true
 
-        nodeExporter:
-          resources:
-            limits:
-              cpu: 100m
-              memory: 64Mi
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
