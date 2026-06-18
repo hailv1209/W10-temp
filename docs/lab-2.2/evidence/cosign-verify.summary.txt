@@ -1,0 +1,7 @@
+docker run gcr.io/projectsigstore/cosign:v2.4.3 verify --key signing/cosign.pub ghcr.io/hailv1209/w10-api:0.0.4
+
+Verification for ghcr.io/hailv1209/w10-api:0.0.4
+Digest: sha256:6a38e6bd1eedb41425039231830b5ebe5e527cbd876c60fca736ce2981175455
+The cosign claims were validated.
+Existence of the claims in the transparency log was verified offline.
+The signatures were verified against the specified public key.

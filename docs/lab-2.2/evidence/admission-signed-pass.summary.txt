@@ -1,0 +1,8 @@
+kubectl --request-timeout=120s -n cosign-test run signed-api --image=ghcr.io/hailv1209/w10-api:0.0.4 --restart=Never --dry-run=server -o yaml
+
+Result: PASS. The API server returned a Pod manifest.
+kind: Pod
+metadata.name: signed-api
+metadata.namespace: cosign-test
+image: ghcr.io/hailv1209/w10-api:0.0.4@sha256:6a38e6bd1eedb41425039231830b5ebe5e527cbd876c60fca736ce2981175455
+Reason: image has a Cosign signature verified by ClusterImagePolicy require-signed-w10-api.

@@ -1,0 +1,7 @@
+kubectl --request-timeout=120s -n cosign-test run unsigned-api --image=ghcr.io/hailv1209/w10-api:0.0.3 --restart=Never --dry-run=server -o yaml
+
+Result: REJECTED by admission webhook policy.sigstore.dev.
+failed policy: require-signed-w10-api
+image: ghcr.io/hailv1209/w10-api:0.0.3@sha256:3d14b7494c2e4484557c08b0aa982852d6f135c64a4a5842b594bea528d4f7a5
+signature key validation failed for authority w10-api-cosign-key
+no signatures found
