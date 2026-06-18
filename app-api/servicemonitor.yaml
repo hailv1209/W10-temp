@@ -6,6 +6,7 @@ metadata:
   namespace: demo
   labels:
     app: api
+    release: kube-prometheus-stack
   annotations:
     argocd.argoproj.io/sync-wave: "2"
 spec:

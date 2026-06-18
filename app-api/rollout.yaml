@@ -55,8 +55,10 @@ spec:
             memory: 128Mi
   strategy:
     canary:
-      # Analysis disabled: app does not expose /metrics endpoint yet.
-      # Re-enable after adding prometheus_client instrumentation.
+      analysis:
+        templates:
+        - templateName: success-rate
+        startingStep: 1
       steps:
       - setWeight: 10
       - pause: {duration: 2m}
