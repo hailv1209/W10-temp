@@ -1,0 +1,98 @@
+# =============================================================================
+# RBAC Definitions – 3 vai trò
+# alice → developer (Role, namespace demo)
+# bob   → sre      (ClusterRole, toàn cục)
+# carol → viewer   (ClusterRole, toàn cục, read-only)
+# =============================================================================
+
+---
+# ---------------------------------------------------------------------------
+# 1. ALICE – developer  (Namespace-scoped Role)
+#    Quyền: CRUD workload (deploy/pod/service) trong namespace "demo"
+# ---------------------------------------------------------------------------
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer
+  namespace: demo
+rules:
+  # Deployment – tạo, đọc, cập nhật, xóa
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # Pod – đọc logs, exec (debug), xóa
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # Pod log – đọc log
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get", "list", "watch"]
+  # Service – tạo, đọc, cập nhật, xóa
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # ReplicaSet
+  - apiGroups: ["apps"]
+    resources: ["replicasets"]
+    verbs: ["get", "list", "watch"]
+
+---
+# ---------------------------------------------------------------------------
+# 2. BOB – sre  (Cluster-scoped ClusterRole)
+#    Quyền: Xem + thao tác pod TOÀN CỤC (mọi namespace)
+# ---------------------------------------------------------------------------
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sre
+rules:
+  # Pod – full quyền toàn cục
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  # Pod log – đọc log pod bất kỳ namespace nào
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get", "list", "watch"]
+  # Pod exec – exec vào container (debug)
+  - apiGroups: [""]
+    resources: ["pods/exec"]
+    verbs: ["create"]
+  # Pod status – cập nhật trạng thái
+  - apiGroups: [""]
+    resources: ["pods/status"]
+    verbs: ["get", "patch", "update"]
+  # Events – xem events toàn cục
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["get", "list", "watch"]
+
+---
+# ---------------------------------------------------------------------------
+# 3. CAROL – viewer  (Cluster-scoped ClusterRole)
+#    Quyền: CHỈ ĐỌC toàn cục (get/list/watch) – KHÔNG create/delete
+# ---------------------------------------------------------------------------
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: viewer
+rules:
+  # Đọc mọi tài nguyên phổ biến
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "services", "configmaps",
+                "secrets", "events", "namespaces", "endpoints"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources: ["deployments", "replicasets", "statefulsets",
+                "daemonsets", "controllerrevisions"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "networkpolicies"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["autoscaling"]
+    resources: ["horizontalpodautoscalers"]
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["monitoring.coreos.com"]
+    resources: ["prometheusrules", "servicemonitors"]
+    verbs: ["get", "list", "watch"]
