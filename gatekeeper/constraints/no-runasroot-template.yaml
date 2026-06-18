@@ -15,7 +15,8 @@ spec:
   targets:
     - target: admission.k8s.gatekeeper.sh
       code:
-        - rego: |
+        - engine: rego
+          source: |
             package forbidrootuser
 
             # Chặn pod-level runAsUser: 0
