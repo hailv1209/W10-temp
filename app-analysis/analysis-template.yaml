@@ -8,14 +8,18 @@ spec:
   metrics:
   - name: success-rate
     interval: 30s
+    count: 3
     successCondition: result >= 0.90
     failureLimit: 10
+    inconclusiveLimit: 5
     provider:
       prometheus:
         address: http://kube-prometheus-stack-prometheus.monitoring.svc:9090
         query: |
-          scalar(
+          (
             sum(rate(flask_http_request_total{namespace="demo",app="api",status!~"5.."}[2m]))
             /
             sum(rate(flask_http_request_total{namespace="demo",app="api"}[2m]))
           )
+          or
+          on() vector(1)
