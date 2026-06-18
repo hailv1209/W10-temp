@@ -1,0 +1,25 @@
+# ArgoCD App: Gatekeeper ConstraintTemplates
+# sync-wave: 1 → deploy SAU controller (wave 0) và TRƯỚC constraints (wave 2)
+# đợi Gatekeeper sinh CRD ra rồi mới apply Constraint
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gatekeeper-templates
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/hailv1209/W10-temp.git
+    path: gatekeeper/templates
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gatekeeper-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - ServerSideApply=true
