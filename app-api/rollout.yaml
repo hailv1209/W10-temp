@@ -24,7 +24,7 @@ spec:
         fsGroup: 1000
       containers:
       - name: api
-        image: ghcr.io/Vuong-Bach/w10-api:0.0.1
+        image: ghcr.io/hailv1209/w10-api:0.0.1
         imagePullPolicy: IfNotPresent
         securityContext:
           allowPrivilegeEscalation: false
