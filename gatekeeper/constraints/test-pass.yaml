@@ -1,0 +1,26 @@
+# TEST: Deployment HỢP LỆ — đủ label "owner"
+# Khi apply → Gatekeeper cho phép tạo thành công
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-with-owner
+  namespace: default
+  labels:
+    owner: hai.nguyen
+    app: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+        owner: hai.nguyen
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25
+          ports:
+            - containerPort: 80

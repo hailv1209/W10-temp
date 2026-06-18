@@ -1,0 +1,22 @@
+# TEST: Deployment VI PHẠM — thiếu label "owner"
+# Khi apply → Gatekeeper webhook TRẢ VỀ LỖI, không cho tạo
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-missing-owner
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25
+          ports:
+            - containerPort: 80

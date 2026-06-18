@@ -1,0 +1,27 @@
+# ConstraintTemplate: Bắt buộc mọi workload có label "owner"
+# Áp dụng cho: Deployment, StatefulSet, DaemonSet, Job, CronJob, Rollout
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: requireownerlabel
+spec:
+  crd:
+    spec:
+      names:
+        kind: RequireOwnerLabel
+      validation:
+        openAPIV3Schema:
+          type: object
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package requireownerlabel
+
+        violation[{"msg": msg}] {
+          labels := input.review.object.metadata.labels
+          not labels.owner
+          msg := sprintf(
+            "Workload '%v' in namespace '%v' must have label 'owner'",
+            [input.review.object.metadata.name, input.review.object.metadata.namespace]
+          )
+        }

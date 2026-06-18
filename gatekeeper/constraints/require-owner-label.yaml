@@ -1,0 +1,20 @@
+# Constraint: Bắt buộc mọi workload có label "owner"
+# Áp dụng template RequireOwnerLabel
+# Loại trừ namespace hệ thống để tránh block ArgoCD, Kube-system...
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: RequireOwnerLabel
+metadata:
+  name: require-owner-label
+spec:
+  match:
+    kinds:
+      - apiGroups: ["apps"]
+        kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+      - apiGroups: ["batch"]
+        kinds: ["Job", "CronJob"]
+      - apiGroups: ["argoproj.io"]
+        kinds: ["Rollout"]
+    excludedNamespaces:
+      - kube-system
+      - gatekeeper-system
+      - argocd
