@@ -14,14 +14,15 @@ spec:
           type: object
   targets:
     - target: admission.k8s.gatekeeper.sh
-      rego: |
-        package requireownerlabel
+      code:
+        - rego: |
+            package requireownerlabel
 
-        violation[{"msg": msg}] {
-          labels := input.review.object.metadata.labels
-          not labels.owner
-          msg := sprintf(
-            "Workload '%v' in namespace '%v' must have label 'owner'",
-            [input.review.object.metadata.name, input.review.object.metadata.namespace]
-          )
-        }
+            violation[{"msg": msg}] {
+              labels := input.review.object.metadata.labels
+              not labels.owner
+              msg := sprintf(
+                "Workload '%v' in namespace '%v' must have label 'owner'",
+                [input.review.object.metadata.name, input.review.object.metadata.namespace]
+              )
+            }

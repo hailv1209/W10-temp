@@ -14,29 +14,30 @@ spec:
           type: object
   targets:
     - target: admission.k8s.gatekeeper.sh
-      rego: |
-        package forbidrootuser
+      code:
+        - rego: |
+            package forbidrootuser
 
-        # Chặn pod-level runAsUser: 0
-        violation[{"msg": msg}] {
-          spec := object.get(input.review.object, "spec", {})
-          runAsUser := object.get(spec, "runAsUser", -1)
-          runAsUser == 0
-          msg := "Pod cannot run as root user (runAsUser: 0 at pod level)"
-        }
+            # Chặn pod-level runAsUser: 0
+            violation[{"msg": msg}] {
+              spec := object.get(input.review.object, "spec", {})
+              runAsUser := object.get(spec, "runAsUser", -1)
+              runAsUser == 0
+              msg := "Pod cannot run as root user (runAsUser: 0 at pod level)"
+            }
 
-        # Chặn container-level securityContext runAsUser: 0
-        violation[{"msg": msg}] {
-          container := input.review.object.spec.template.spec.containers[_]
-          runAsUser := object.get(container.securityContext, "runAsUser", -1)
-          runAsUser == 0
-          msg := sprintf("Container '%v' cannot run as root user (runAsUser: 0)", [container.name])
-        }
+            # Chặn container-level securityContext runAsUser: 0
+            violation[{"msg": msg}] {
+              container := input.review.object.spec.template.spec.containers[_]
+              runAsUser := object.get(container.securityContext, "runAsUser", -1)
+              runAsUser == 0
+              msg := sprintf("Container '%v' cannot run as root user (runAsUser: 0)", [container.name])
+            }
 
-        # Chặn initContainer runAsUser: 0
-        violation[{"msg": msg}] {
-          container := input.review.object.spec.template.spec.initContainers[_]
-          runAsUser := object.get(container.securityContext, "runAsUser", -1)
-          runAsUser == 0
-          msg := sprintf("InitContainer '%v' cannot run as root user (runAsUser: 0)", [container.name])
-        }
+            # Chặn initContainer runAsUser: 0
+            violation[{"msg": msg}] {
+              container := input.review.object.spec.template.spec.initContainers[_]
+              runAsUser := object.get(container.securityContext, "runAsUser", -1)
+              runAsUser == 0
+              msg := sprintf("InitContainer '%v' cannot run as root user (runAsUser: 0)", [container.name])
+            }
