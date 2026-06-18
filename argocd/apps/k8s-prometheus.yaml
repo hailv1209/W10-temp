@@ -14,14 +14,40 @@ spec:
     targetRevision: 65.1.1
     helm:
       values: |
+        # ---- Owner label cho TẤT CẢ workloads (Deployment/StatefulSet/DaemonSet) ----
+        # commonLabels được helm chart apply vào TẤT CẢ resources (workload metadata + pod template)
+        # → Giải quyết Gatekeeper constraint require-owner-label
         commonLabels:
           owner: hailv
-        
+
+        # ---- Resources limits cho tất cả containers ----
+        # Giải quyết Gatekeeper constraint require-pod-limits
+        prometheusOperator:
+          admissionWebhooks:
+            failurePolicy: Ignore
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+        kube-state-metrics:
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
         prometheus:
           prometheusSpec:
             serviceMonitorSelectorNilUsesHelmValues: false
+            resources:
+              limits:
+                cpu: 500m
+                memory: 1Gi
 
         alertmanager:
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
           config:
             global:
               resolve_timeout: 5m
@@ -107,10 +133,37 @@ spec:
                     </div>
                   </body>
                   </html>
-
           alertmanagerSpec:
             secrets:
             - alertmanager-email
+
+        grafana:
+          resources:
+            limits:
+              cpu: 300m
+              memory: 256Mi
+          initChownData:
+            resources:
+              limits:
+                cpu: 100m
+                memory: 64Mi
+          sidecar:
+            dashboards:
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 64Mi
+            datasources:
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 64Mi
+
+        nodeExporter:
+          resources:
+            limits:
+              cpu: 100m
+              memory: 64Mi
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
