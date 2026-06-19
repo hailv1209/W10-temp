@@ -150,24 +150,63 @@ spec:
         grafana:
           extraLabels:
             owner: hailv
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 20
+            timeoutSeconds: 10
+            periodSeconds: 10
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 90
+            timeoutSeconds: 30
+            periodSeconds: 10
+            failureThreshold: 10
           resources:
-            limits:
-              cpu: 300m
+            requests:
+              cpu: 100m
               memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
           initChownData:
             resources:
+              requests:
+                cpu: 25m
+                memory: 32Mi
               limits:
                 cpu: 100m
                 memory: 64Mi
           sidecar:
             resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
               limits:
-                cpu: 100m
-                memory: 64Mi
+                cpu: 200m
+                memory: 256Mi
             dashboards:
               enabled: true
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
             datasources:
               enabled: true
+              resources:
+                requests:
+                  cpu: 50m
+                  memory: 128Mi
+                limits:
+                  cpu: 200m
+                  memory: 256Mi
 
   destination:
     server: https://kubernetes.default.svc
