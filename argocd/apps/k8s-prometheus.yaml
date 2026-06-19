@@ -41,6 +41,14 @@ spec:
         prometheusOperator:
           admissionWebhooks:
             failurePolicy: Ignore
+          prometheusConfigReloader:
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: 100m
+                memory: 128Mi
           resources:
             limits:
               cpu: 200m
@@ -144,6 +152,13 @@ spec:
                   </body>
                   </html>
           alertmanagerSpec:
+            resources:
+              requests:
+                cpu: 100m
+                memory: 128Mi
+              limits:
+                cpu: 200m
+                memory: 256Mi
             secrets:
             - alertmanager-email
 
